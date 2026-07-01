@@ -21,7 +21,7 @@ export default function Home() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2200);
+    const timer = setTimeout(() => setLoading(false), 2400);
     return () => clearTimeout(timer);
   }, []);
 
@@ -32,9 +32,7 @@ export default function Home() {
         setRepos(data);
         setLoadingRepos(false);
       })
-      .catch(() => {
-        setLoadingRepos(false);
-      });
+      .catch(() => setLoadingRepos(false));
   }, []);
 
   return (
@@ -49,7 +47,7 @@ export default function Home() {
           <motion.main
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Hero />
             <About />

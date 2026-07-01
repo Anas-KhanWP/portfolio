@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { GitHubRepoDetail } from "@/lib/types";
-import { redis } from "@/lib/redis";
+import { getRedis } from "@/lib/redis";
 import { fetchRepoDetail } from "@/lib/github";
 
 const CACHE_TTL = 3600;
@@ -13,6 +13,7 @@ export async function GET(
 
   try {
     const cacheKey = `repos:${process.env.GITHUB_USERNAME || "default"}:${name}`;
+    const redis = getRedis();
 
     if (redis) {
       const cached = await redis.get<GitHubRepoDetail>(cacheKey);

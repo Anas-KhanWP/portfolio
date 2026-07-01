@@ -23,7 +23,8 @@ export async function fetchRepos(count = 6): Promise<GitHubRepo[]> {
       { headers: getHeaders(), next: { revalidate: 3600 } }
     );
     if (!res.ok) return [];
-    return res.json();
+    const repos: GitHubRepo[] = await res.json();
+    return repos.filter((r) => !r.private);
   } catch {
     return [];
   }
@@ -44,7 +45,7 @@ export async function fetchAllRepos(
     const hasMore = link ? link.includes('rel="next"') : false;
 
     const repos: GitHubRepo[] = await res.json();
-    return { repos, hasMore };
+    return { repos: repos.filter((r) => !r.private), hasMore };
   } catch {
     return { repos: [], hasMore: false };
   }
@@ -69,6 +70,7 @@ export async function fetchRepoDetail(
 
     const detail: GitHubRepoDetail = await repoRes.json();
 
+    if (detail.private) return null;
     if (readmeRes.ok) {
       const readme = await readmeRes.json();
       detail.readme = Buffer.from(readme.content, "base64").toString("utf-8");

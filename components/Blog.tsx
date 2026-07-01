@@ -4,6 +4,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
 import { BlogPost } from "@/lib/types";
 import { portfolioConfig } from "@/lib/portfolio";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 interface BlogProps {
   posts: BlogPost[];
@@ -20,7 +21,15 @@ function formatDate(dateStr: string) {
   });
 }
 
-function BlogCard({ post, index }: { post: BlogPost; index: number }) {
+function BlogCard({
+  post,
+  index,
+  featured,
+}: {
+  post: BlogPost;
+  index: number;
+  featured?: boolean;
+}) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -30,21 +39,43 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
       href={post.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group block rounded-xl border border-white/5 bg-bg-secondary p-6 transition-all hover:border-accent/30 hover:bg-white/[0.03]"
+      className={`group block rounded-xl border transition-all hover:border-amber-500/20 ${
+        featured
+          ? "border-white/[0.04] bg-bg-secondary/50 md:col-span-2"
+          : "border-white/[0.04] bg-bg-secondary/50"
+      }`}
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.15 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
     >
-      <h3 className="mb-2 font-semibold text-text-primary transition-colors group-hover:text-accent">
-        {post.title}
-      </h3>
-      <p className="mb-4 line-clamp-2 text-sm text-text-secondary">
-        {post.description}
-      </p>
-      <div className="flex items-center gap-3 text-xs text-text-secondary">
-        <span>{formatDate(post.published_at)}</span>
-        <span>·</span>
-        <span>{post.tags.slice(0, 2).join(", ")}</span>
+      <div className="p-6">
+        <h3
+          className={`font-semibold text-text-primary transition-colors group-hover:text-amber-400 ${
+            featured ? "text-xl" : "text-base"
+          }`}
+        >
+          {post.title}
+        </h3>
+        <p
+          className={`mt-2 text-text-secondary ${
+            featured ? "line-clamp-3" : "line-clamp-2"
+          } text-sm`}
+        >
+          {post.description}
+        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <span className="text-xs text-text-muted">
+            {formatDate(post.published_at)}
+          </span>
+          {post.tags.slice(0, featured ? 4 : 3).map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs text-amber-500"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </motion.a>
   );
@@ -62,17 +93,15 @@ export default function Blog({ posts, setPosts }: BlogProps) {
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
 
-      const articles: BlogPost[] = data.map(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (article: any) => ({
-          title: article.title,
-          url: article.url,
-          description: article.description,
-          published_at: article.published_at,
-          tags: article.tag_list || [],
-          image: article.cover_image,
-        })
-      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const articles: BlogPost[] = data.map((article: any) => ({
+        title: article.title,
+        url: article.url,
+        description: article.description,
+        published_at: article.published_at,
+        tags: article.tag_list || [],
+        image: article.cover_image,
+      }));
 
       if (articles.length > 0) {
         setPosts(articles);
@@ -93,16 +122,14 @@ export default function Blog({ posts, setPosts }: BlogProps) {
 
   return (
     <section id="blog" className="mx-auto max-w-6xl px-6 py-20 md:py-32">
-      <h2 className="section-heading">
-        Blog<span className="text-accent">.</span>
-      </h2>
+      <SectionHeading number="05" title="Blog" />
 
       {loading ? (
         <div className="grid gap-6 md:grid-cols-2">
-          {Array.from({ length: 4 }).map((_, i) => (
+          {Array.from({ length: 3 }).map((_, i) => (
             <div
               key={i}
-              className="animate-pulse rounded-xl border border-white/5 bg-bg-secondary p-6"
+              className="animate-pulse rounded-xl border border-white/[0.04] bg-bg-secondary/50 p-6"
             >
               <div className="mb-4 h-5 w-3/4 rounded bg-white/5" />
               <div className="mb-2 h-4 w-full rounded bg-white/5" />
@@ -112,21 +139,24 @@ export default function Blog({ posts, setPosts }: BlogProps) {
           ))}
         </div>
       ) : posts.length === 0 ? (
-        <div className="rounded-xl border border-white/5 bg-bg-secondary p-12 text-center">
-          <p className="text-text-secondary">
-            No blog posts yet. Coming soon!
-          </p>
+        <div className="rounded-2xl border border-white/[0.04] bg-bg-secondary/50 p-12 text-center">
+          <p className="text-text-secondary">No blog posts yet. Coming soon!</p>
         </div>
       ) : (
         <>
           {error && (
-            <p className="mb-4 text-sm text-text-secondary">
+            <p className="mb-4 text-sm text-text-muted">
               Could not reach Dev.to. Showing fallback articles.
             </p>
           )}
           <div className="grid gap-6 md:grid-cols-2">
             {posts.map((post, i) => (
-              <BlogCard key={post.url} post={post} index={i} />
+              <BlogCard
+                key={post.url}
+                post={post}
+                index={i}
+                featured={i === 0 && posts.length >= 3}
+              />
             ))}
           </div>
         </>

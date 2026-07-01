@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { GitHubRepo } from "@/lib/types";
+import { renderHTML } from "@/lib/utils";
 
 const PER_PAGE = 12;
 
@@ -40,15 +41,19 @@ export default function ProjectsPage() {
       const res = await fetch(
         `/api/github/repos/all?page=${pageNum}&per_page=${PER_PAGE}`
       );
-      const data = await res.json();
+      const data: { repos: GitHubRepo[]; hasMore: boolean } = await res.json();
       if (append) {
-        setRepos((prev) => [...prev, ...data.repos]);
+        setRepos((prev) => {
+          const ids = new Set(prev.map((r: GitHubRepo) => r.id));
+          const fresh = data.repos.filter((r: GitHubRepo) => !ids.has(r.id));
+          return [...prev, ...fresh];
+        });
       } else {
         setRepos(data.repos);
       }
       setHasMore(data.hasMore);
     } catch {
-      // silently fail, keep existing repos
+      // silently fail
     }
   }, []);
 
@@ -57,12 +62,17 @@ export default function ProjectsPage() {
     fetchPage(1).finally(() => setLoading(false));
   }, [fetchPage]);
 
+  const loadingRef = useRef(false);
+
   const loadMore = async () => {
-    const nextPage = page + 1;
+    if (loadingRef.current) return;
+    loadingRef.current = true;
     setLoadingMore(true);
+    const nextPage = page + 1;
     await fetchPage(nextPage, true);
     setPage(nextPage);
     setLoadingMore(false);
+    loadingRef.current = false;
   };
 
   return (
@@ -74,30 +84,20 @@ export default function ProjectsPage() {
       >
         <Link
           href="/"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-text-secondary transition-colors hover:text-accent"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-text-muted transition-colors hover:text-amber-500"
         >
-          <svg
-            className="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19 12H5m0 0l7 7m-7-7l7-7"
-            />
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7" />
           </svg>
           Back
         </Link>
 
         <h1 className="section-heading">
-          All Projects<span className="text-accent">.</span>
+          All Projects<span className="text-amber-500">.</span>
         </h1>
         <p className="mb-10 text-text-secondary">
           {repos.length > 0
-            ? `Showing ${repos.length} ${hasMore ? "+" : ""} repositories`
+            ? `Showing ${repos.length}${hasMore ? "+" : ""} repositories`
             : "Loading repositories..."}
         </p>
       </motion.div>
@@ -105,10 +105,7 @@ export default function ProjectsPage() {
       {loading ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="animate-pulse rounded-xl border border-white/5 bg-bg-secondary p-6"
-            >
+            <div key={i} className="animate-pulse rounded-xl border border-white/[0.04] bg-bg-secondary/50 p-6">
               <div className="mb-4 h-5 w-2/3 rounded bg-white/5" />
               <div className="mb-2 h-4 w-full rounded bg-white/5" />
               <div className="mb-4 h-4 w-4/5 rounded bg-white/5" />
@@ -120,7 +117,7 @@ export default function ProjectsPage() {
           ))}
         </div>
       ) : repos.length === 0 ? (
-        <div className="rounded-xl border border-white/5 bg-bg-secondary p-12 text-center">
+        <div className="rounded-2xl border border-white/[0.04] bg-bg-secondary/50 p-12 text-center">
           <p className="text-text-secondary">No public repositories found.</p>
         </div>
       ) : (
@@ -131,45 +128,33 @@ export default function ProjectsPage() {
                 key={repo.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: (i % PER_PAGE) * 0.05 }}
+                transition={{ duration: 0.4, delay: (i % PER_PAGE) * 0.04 }}
               >
                 <Link
                   href={`/projects/${repo.name}`}
-                  className="group block rounded-xl border border-white/5 bg-bg-secondary p-6 transition-all hover:border-accent/30 hover:bg-white/[0.03]"
+                  className="group block rounded-xl border border-white/[0.04] bg-bg-secondary/50 p-6 transition-all hover:border-amber-500/20"
                 >
                   <div className="mb-3 flex items-center gap-3">
-                    <svg
-                      className="h-5 w-5 text-text-secondary transition-colors group-hover:text-accent"
-                      viewBox="0 0 16 16"
-                      fill="currentColor"
-                    >
+                    <svg className="h-5 w-5 text-text-muted transition-colors group-hover:text-amber-500" viewBox="0 0 16 16" fill="currentColor">
                       <path d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 010-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 11-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z" />
                     </svg>
-                    <h3 className="font-semibold text-text-primary truncate group-hover:text-accent">
+                    <h3 className="font-semibold text-text-primary truncate group-hover:text-amber-400">
                       {repo.name}
                     </h3>
                   </div>
-                  <p className="mb-4 line-clamp-2 text-sm text-text-secondary">
-                    {repo.description || "No description available."}
-                  </p>
-                  <div className="flex items-center gap-4 text-xs text-text-secondary">
+                  <p
+                    className="mb-4 line-clamp-2 text-sm text-text-secondary"
+                    dangerouslySetInnerHTML={renderHTML(repo.description, "No description available.")}
+                  />
+                  <div className="flex items-center gap-4 text-xs text-text-muted">
                     {repo.language && (
                       <span className="flex items-center gap-1.5">
-                        <span
-                          className="inline-block h-3 w-3 rounded-full"
-                          style={{
-                            backgroundColor: languages[repo.language] || "#666",
-                          }}
-                        />
+                        <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: languages[repo.language] || "#666" }} />
                         {repo.language}
                       </span>
                     )}
                     <span className="flex items-center gap-1">
-                      <svg
-                        className="h-3.5 w-3.5"
-                        viewBox="0 0 16 16"
-                        fill="currentColor"
-                      >
+                      <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
                         <path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z" />
                       </svg>
                       {repo.stargazers_count}
@@ -186,7 +171,7 @@ export default function ProjectsPage() {
               <button
                 onClick={loadMore}
                 disabled={loadingMore}
-                className="rounded-lg border border-white/10 px-8 py-3 text-sm font-medium transition-all hover:border-accent/50 hover:bg-accent/10 disabled:opacity-50"
+                className="rounded-lg border border-amber-500/20 px-8 py-3 text-sm font-medium text-amber-500 transition-all hover:bg-amber-500/5 disabled:opacity-40"
               >
                 {loadingMore ? "Loading..." : "Load More"}
               </button>
