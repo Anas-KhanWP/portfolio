@@ -5,7 +5,10 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import rehypeHighlight from "rehype-highlight";
 import { GitHubRepoDetail } from "@/lib/types";
+import { renderHTML } from "@/lib/utils";
 
 const languages: Record<string, string> = {
   TypeScript: "#3178C6",
@@ -104,36 +107,29 @@ export default function ProjectDetailPage({ params }: Props) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="mb-6 flex items-center gap-4">
-          <Link
-            href="/projects"
-            className="inline-flex items-center gap-2 text-sm text-text-secondary transition-colors hover:text-accent"
+        <Link
+          href="/projects"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-text-secondary transition-colors hover:text-accent"
+        >
+          <svg
+            className="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
           >
-            <svg
-              className="h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19 12H5m0 0l7 7m-7-7l7-7"
-              />
-            </svg>
-            All Projects
-          </Link>
-        </div>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19 12H5m0 0l7 7m-7-7l7-7"
+            />
+          </svg>
+          All Projects
+        </Link>
 
-        <div className="rounded-xl border border-white/5 bg-bg-secondary p-8">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold md:text-3xl">{repo.name}</h1>
-              <p className="mt-2 text-text-secondary">
-                {repo.description || "No description."}
-              </p>
-            </div>
+        <div className="rounded-xl border border-white/5 bg-bg-secondary p-6 md:p-8">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <h1 className="text-2xl font-bold md:text-3xl">{repo.name}</h1>
             <a
               href={repo.html_url}
               target="_blank"
@@ -147,34 +143,31 @@ export default function ProjectDetailPage({ params }: Props) {
             </a>
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-text-secondary">
+          {repo.description && (
+            <p
+              className="mt-2 text-text-secondary"
+              dangerouslySetInnerHTML={renderHTML(repo.description, "")}
+            />
+          )}
+
+          <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-text-secondary">
             {repo.language && (
               <span className="flex items-center gap-1.5">
                 <span
                   className="inline-block h-3 w-3 rounded-full"
-                  style={{
-                    backgroundColor: languages[repo.language] || "#666",
-                  }}
+                  style={{ backgroundColor: languages[repo.language] || "#666" }}
                 />
                 {repo.language}
               </span>
             )}
             <span className="flex items-center gap-1">
-              <svg
-                className="h-4 w-4"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-              >
+              <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z" />
               </svg>
               {repo.stargazers_count}
             </span>
             <span className="flex items-center gap-1">
-              <svg
-                className="h-4 w-4"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-              >
+              <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-.878a2.25 2.25 0 10-1.5 0v.878a.25.25 0 01-.25.25h-3a.25.25 0 01-.25-.25v-.878a2.25 2.25 0 10-1.5 0zM3.5 3.5a.75.75 0 01.75-.75 2.25 2.25 0 012.121 1.5h4.258a2.25 2.25 0 012.121-1.5.75.75 0 010 1.5 2.25 2.25 0 00-1.5 2.122v.878a.25.25 0 01-.25.25h-1.5a.25.25 0 01-.25-.25V6.372c0-.2.066-.386.18-.533A2.25 2.25 0 007 5.372v.878a.25.25 0 01-.25.25h-1.5a.25.25 0 01-.25-.25V5.372c0-.2.066-.386.18-.533A2.25 2.25 0 003.5 3.5z" />
               </svg>
               {repo.forks_count}
@@ -186,10 +179,7 @@ export default function ProjectDetailPage({ params }: Props) {
           {repo.topics && repo.topics.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
               {repo.topics.map((topic) => (
-                <span
-                  key={topic}
-                  className="rounded-full bg-accent/10 px-3 py-1 text-xs text-accent"
-                >
+                <span key={topic} className="rounded-full bg-accent/10 px-3 py-1 text-xs text-accent">
                   {topic}
                 </span>
               ))}
@@ -233,11 +223,14 @@ export default function ProjectDetailPage({ params }: Props) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-8 rounded-xl border border-white/5 bg-bg-secondary p-8"
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="mt-8 rounded-xl border border-white/5 bg-bg-secondary p-6 md:p-8"
           >
-            <div className="prose prose-invert prose-sm max-w-none [&_img]:rounded-lg [&_pre]:bg-[#0a0a0a] [&_pre]:border [&_pre]:border-white/5 [&_code]:text-accent [&_a]:text-accent [&_h1]:text-xl [&_h2]:text-lg [&_h3]:text-base">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <div className="prose prose-invert max-w-none prose-headings:text-text-primary prose-a:text-accent prose-strong:text-text-primary prose-code:text-accent prose-pre:bg-transparent prose-pre:p-0 prose-img:rounded-lg prose-img:mx-auto prose-hr:border-white/5 [&_pre]:border-0">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw, rehypeHighlight]}
+              >
                 {repo.readme}
               </ReactMarkdown>
             </div>

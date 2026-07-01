@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GitHubRepo } from "@/lib/types";
-import { redis } from "@/lib/redis";
+import { getRedis } from "@/lib/redis";
 import { fetchAllRepos } from "@/lib/github";
 
 const CACHE_TTL = 3600;
 
 function cacheKey(page: number, perPage: number) {
-  return `repos:${process.env.GITHUB_USERNAME || "default"}:page:${page}:${perPage}`;
+  return `repos:${process.env.GITHUB_USERNAME || "default"}:page:${page}:${perPage}:v2`;
 }
 
 export async function GET(req: NextRequest) {
   try {
     const page = parseInt(req.nextUrl.searchParams.get("page") || "1", 10);
     const perPage = parseInt(req.nextUrl.searchParams.get("per_page") || "12", 10);
+    const redis = getRedis();
 
     if (redis) {
       const cached = await redis.get<{ repos: GitHubRepo[]; hasMore: boolean }>(

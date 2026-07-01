@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --bg-primary: #0a0a0a;
@@ -50,17 +51,29 @@ body {
 }
 
 @keyframes ring-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
-  50% { box-shadow: 0 0 40px var(--accent-glow), 0 0 60px var(--accent-glow); }
+  0%,
+  100% {
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+  50% {
+    box-shadow: 0 0 40px var(--accent-glow), 0 0 60px var(--accent-glow);
+  }
 }
 
 .animate-float {
@@ -83,4 +96,60 @@ body {
     font-size: 2.5rem;
     margin-bottom: 3rem;
   }
+}
+
+/* Highlight.js — GitHub dark theme overrides */
+pre code.hljs {
+  background: #0d1117;
+  color: #c9d1d9;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  display: block;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-type {
+  color: #ff7b72;
+}
+.hljs-string,
+.hljs-addition {
+  color: #a5d6ff;
+}
+.hljs-title,
+.hljs-section {
+  color: #d2a8ff;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #8b949e;
+  font-style: italic;
+}
+.hljs-number,
+.hljs-literal {
+  color: #79c0ff;
+}
+.hljs-built_in,
+.hljs-params {
+  color: #ffa657;
+}
+.hljs-attr {
+  color: #d2a8ff;
+}
+.hljs-variable,
+.hljs-template-variable {
+  color: #ffa657;
+}
+.hljs-meta {
+  color: #8b949e;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
 }

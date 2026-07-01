@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { GitHubRepo } from "@/lib/types";
+import { renderHTML } from "@/lib/utils";
 
 const PER_PAGE = 12;
 
@@ -149,9 +150,10 @@ export default function ProjectsPage() {
                       {repo.name}
                     </h3>
                   </div>
-                  <p className="mb-4 line-clamp-2 text-sm text-text-secondary">
-                    {repo.description || "No description available."}
-                  </p>
+                  <p
+                    className="mb-4 line-clamp-2 text-sm text-text-secondary"
+                    dangerouslySetInnerHTML={renderHTML(repo.description, "No description available.")}
+                  />
                   <div className="flex items-center gap-4 text-xs text-text-secondary">
                     {repo.language && (
                       <span className="flex items-center gap-1.5">

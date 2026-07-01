@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { GitHubRepo } from "@/lib/types";
+import { renderHTML } from "@/lib/utils";
 
 interface ProjectsProps {
   repos: GitHubRepo[];
@@ -56,9 +57,10 @@ function RepoCard({ repo, index }: { repo: GitHubRepo; index: number }) {
           </h3>
         </div>
 
-        <p className="mb-4 line-clamp-2 text-sm text-text-secondary">
-          {repo.description || "No description available."}
-        </p>
+        <p
+          className="mb-4 line-clamp-2 text-sm text-text-secondary"
+          dangerouslySetInnerHTML={renderHTML(repo.description, "No description available.")}
+        />
 
         <div className="flex items-center gap-4 text-xs text-text-secondary">
           {repo.language && (

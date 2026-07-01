@@ -1,13 +1,15 @@
 import { Redis } from "@upstash/redis";
 
-function getRedis() {
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+let _redis: Redis | null | undefined;
+
+export function getRedis(): Redis | null {
+  if (_redis !== undefined) return _redis;
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) {
+    _redis = null;
     return null;
   }
-  return new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-  });
+  _redis = new Redis({ url, token });
+  return _redis;
 }
-
-export const redis = getRedis();
