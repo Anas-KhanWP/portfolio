@@ -97,7 +97,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-20"
+      className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-6 pt-20"
     >
       <motion.div
         className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(245,158,11,0.06),transparent_60%)]"
@@ -133,7 +133,7 @@ export default function Hero() {
         )}
       </motion.div>
 
-      <h1 className="relative z-10 flex flex-wrap justify-center gap-x-1 text-center text-5xl font-extrabold tracking-tight md:text-7xl lg:text-8xl">
+      <h1 className="relative z-10 flex flex-wrap justify-center gap-x-1 gap-y-0 text-center text-4xl font-extrabold tracking-tight sm:text-5xl md:text-7xl lg:text-8xl">
         {nameLetters.map((letter, i) => (
           <motion.span
             key={i}
@@ -174,7 +174,7 @@ export default function Hero() {
       </motion.p>
 
       <motion.div
-        className="relative z-10 mt-10 flex gap-4"
+        className="relative z-10 mt-10 flex flex-col items-center gap-3 sm:flex-row sm:gap-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2.5, duration: 0.6 }}

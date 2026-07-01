@@ -6,7 +6,7 @@ import BackToTop from "@/components/ui/BackToTop";
 export default function Footer() {
   return (
     <>
-      <footer className="relative px-6 py-10">
+      <footer className="relative px-6 py-10 pb-20">
         <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
 
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 text-sm md:flex-row">
@@ -23,7 +23,7 @@ export default function Footer() {
               href={portfolioConfig.socials.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-text-muted transition-colors hover:text-amber-500"
+              className="px-3 py-2 text-text-muted transition-colors hover:text-amber-500"
             >
               GitHub
             </a>
@@ -31,13 +31,13 @@ export default function Footer() {
               href={portfolioConfig.socials.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-text-muted transition-colors hover:text-amber-500"
+              className="px-3 py-2 text-text-muted transition-colors hover:text-amber-500"
             >
               LinkedIn
             </a>
             <a
               href={`mailto:${portfolioConfig.socials.email}`}
-              className="text-text-muted transition-colors hover:text-amber-500"
+              className="px-3 py-2 text-text-muted transition-colors hover:text-amber-500"
             >
               Email
             </a>

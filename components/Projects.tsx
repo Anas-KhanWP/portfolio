@@ -206,7 +206,7 @@ export default function Projects({ repos, loading }: ProjectsProps) {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`rounded-lg px-3 py-1.5 text-xs transition-all ${
+                className={`rounded-lg px-3 py-2.5 sm:py-1.5 text-xs transition-all ${
                   filter === f
                     ? "bg-amber-500/10 text-amber-500 border border-amber-500/30"
                     : "text-text-muted border border-white/[0.04] hover:border-white/10 hover:text-text-secondary"
@@ -244,7 +244,7 @@ export default function Projects({ repos, loading }: ProjectsProps) {
         </div>
       ) : (
         <>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((repo, i) => {
               const mostStars = Math.max(...filtered.map((r) => r.stargazers_count));
               return (

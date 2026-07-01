@@ -62,7 +62,7 @@ export default function About() {
               viewport={{ once: true, margin: "-50px" }}
             >
               {i === 0 && (
-                <span className="float-left mr-2 font-serif text-5xl font-bold text-amber-500 leading-none md:text-6xl">
+                <span className="float-left mr-2 font-serif text-4xl font-bold text-amber-500 leading-none sm:text-5xl md:text-6xl">
                   I
                 </span>
               )}
@@ -71,7 +71,7 @@ export default function About() {
           ))}
         </div>
         <div className="md:col-span-3">
-          <div className="grid grid-cols-3 gap-4 rounded-2xl border border-white/[0.04] bg-bg-secondary/50 p-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 rounded-2xl border border-white/[0.04] bg-bg-secondary/50 p-4 sm:p-8">
             <AnimatedCounter value={7} label="Years Exp." />
             <AnimatedCounter value={50} label="Projects" />
             <AnimatedCounter value={15} label="Technologies" />
