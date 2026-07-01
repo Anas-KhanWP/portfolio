@@ -6,7 +6,7 @@ export const portfolioConfig: PortfolioConfig = {
   tagline:
     "Building AI-powered apps & scalable full-stack solutions. 7+ years freelance + enterprise.",
   photo: "/photo.png",
-  resumeUrl: "#",
+  resumeUrl: "/resume.pdf",
   bio: [
     "I'm a full-stack software engineer specializing in AI-powered applications. With 7+ years of freelance and enterprise experience, I build everything from custom WordPress and Odoo solutions to modern React/Next.js apps and AI-driven systems.",
     "I bring a versatile stack — Python, JavaScript, PHP/Laravel, and cloud infrastructure — to deliver scalable, high-performance digital products. Whether it's an intelligent automation pipeline or a pixel-perfect frontend, I focus on clean architecture and real business impact.",

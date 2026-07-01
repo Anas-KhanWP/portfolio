@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { portfolioConfig } from "@/lib/portfolio";
 
 const links = [
@@ -11,8 +12,11 @@ const links = [
   { label: "Experience", href: "#experience" },
   { label: "Blog", href: "#blog" },
   { label: "Contact", href: "#contact" },
+];
+
+const pageLinks = [
   { label: "All Projects", href: "/projects" },
-  { label: "Resume", href: "#" },
+  { label: "Resume", href: "/resume.pdf" },
 ];
 
 export default function Navbar() {
@@ -21,13 +25,13 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", onScroll);
+    const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.6);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    const sections = links.map((l) => l.href.slice(1));
+    const sectionIds = links.map((l) => l.href.slice(1));
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -36,10 +40,10 @@ export default function Navbar() {
           }
         });
       },
-      { rootMargin: "-40% 0px -55% 0px" }
+      { rootMargin: "-30% 0px -60% 0px" }
     );
 
-    sections.forEach((id) => {
+    sectionIds.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
@@ -49,34 +53,49 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, delay: 0.2 }}
-      className={`fixed top-0 right-0 left-0 z-40 transition-all duration-300 ${
-        scrolled
-          ? "border-b border-white/10 bg-bg-primary/90 backdrop-blur-lg"
-          : "bg-transparent"
-      }`}
+      initial={{ y: -100, opacity: 0 }}
+      animate={scrolled ? { y: 0, opacity: 1 } : { y: -100, opacity: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="fixed top-0 right-0 left-0 z-40 border-b border-white/[0.04] bg-bg-primary/80 backdrop-blur-xl"
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a
-          href="#"
-          className="text-lg font-bold tracking-tight transition-colors hover:text-accent"
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+        <Link
+          href="/"
+          className="text-lg font-bold tracking-tight transition-colors"
         >
-          {portfolioConfig.name.split(" ")[0]}
-          <span className="text-accent">.</span>
-        </a>
+          <span className="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">
+            {portfolioConfig.name.split(" ")[0]}
+          </span>
+          <span className="text-amber-500">.          </span>
+        </Link>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-1 md:flex">
           {links.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className={`text-sm transition-colors hover:text-accent ${
+              className={`relative px-3 py-2 text-sm transition-colors hover:text-text-primary ${
                 activeSection === link.href.slice(1)
-                  ? "text-accent"
+                  ? "text-text-primary"
                   : "text-text-secondary"
               }`}
+            >
+              {link.label}
+              {activeSection === link.href.slice(1) && (
+                <motion.span
+                  layoutId="nav-indicator"
+                  className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-amber-500"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
+            </a>
+          ))}
+          <span className="mx-2 h-4 w-px bg-white/10" />
+          {pageLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="px-3 py-2 text-sm text-text-secondary transition-colors hover:text-text-primary"
             >
               {link.label}
             </a>
@@ -88,16 +107,16 @@ export default function Navbar() {
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           <motion.span
-            className="block h-0.5 w-5 bg-text-primary"
-            animate={mobileOpen ? { rotate: 45, y: 4 } : { rotate: 0, y: 0 }}
+            className="block h-[1.5px] w-5 bg-text-primary"
+            animate={mobileOpen ? { rotate: 45, y: 4.5 } : { rotate: 0, y: 0 }}
           />
           <motion.span
-            className="block h-0.5 w-5 bg-text-primary"
+            className="block h-[1.5px] w-5 bg-text-primary"
             animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
           />
           <motion.span
-            className="block h-0.5 w-5 bg-text-primary"
-            animate={mobileOpen ? { rotate: -45, y: -4 } : { rotate: 0, y: 0 }}
+            className="block h-[1.5px] w-5 bg-text-primary"
+            animate={mobileOpen ? { rotate: -45, y: -4.5 } : { rotate: 0, y: 0 }}
           />
         </button>
       </div>
@@ -108,22 +127,21 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden border-t border-white/10 bg-bg-primary/95 backdrop-blur-lg md:hidden"
+            className="overflow-hidden border-t border-white/[0.04] bg-bg-primary/95 backdrop-blur-xl md:hidden"
           >
             <div className="flex flex-col gap-1 px-6 py-4">
-              {links.map((link) => (
-                <a
+              {[...links, ...pageLinks].map((link, i) => (
+                <motion.a
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5 hover:text-accent ${
-                    activeSection === link.href.slice(1)
-                      ? "text-accent"
-                      : "text-text-secondary"
-                  }`}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="rounded-lg px-3 py-2.5 text-sm transition-colors hover:bg-white/5 hover:text-text-primary text-text-secondary"
                 >
                   {link.label}
-                </a>
+                </motion.a>
               ))}
             </div>
           </motion.div>

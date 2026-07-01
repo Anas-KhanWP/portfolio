@@ -79,20 +79,10 @@ export default function ProjectDetailPage({ params }: Props) {
         <h1 className="text-2xl font-bold">Repository not found</h1>
         <Link
           href="/projects"
-          className="mt-4 inline-flex items-center gap-2 text-sm text-accent hover:underline"
+          className="mt-4 inline-flex items-center gap-2 text-sm text-amber-500 hover:underline"
         >
-          <svg
-            className="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19 12H5m0 0l7 7m-7-7l7-7"
-            />
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7" />
           </svg>
           Back to projects
         </Link>
@@ -109,32 +99,22 @@ export default function ProjectDetailPage({ params }: Props) {
       >
         <Link
           href="/projects"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-text-secondary transition-colors hover:text-accent"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-text-muted transition-colors hover:text-amber-500"
         >
-          <svg
-            className="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19 12H5m0 0l7 7m-7-7l7-7"
-            />
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7" />
           </svg>
           All Projects
         </Link>
 
-        <div className="rounded-xl border border-white/5 bg-bg-secondary p-6 md:p-8">
+        <div className="rounded-2xl border border-white/[0.04] bg-bg-secondary/50 p-6 md:p-8">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <h1 className="text-2xl font-bold md:text-3xl">{repo.name}</h1>
             <a
               href={repo.html_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex shrink-0 items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm transition-all hover:border-accent/50 hover:bg-accent/10"
+              className="flex shrink-0 items-center gap-2 rounded-lg border border-amber-500/20 px-4 py-2 text-sm text-amber-500 transition-all hover:bg-amber-500/5 hover:border-amber-500/40"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
@@ -153,10 +133,7 @@ export default function ProjectDetailPage({ params }: Props) {
           <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-text-secondary">
             {repo.language && (
               <span className="flex items-center gap-1.5">
-                <span
-                  className="inline-block h-3 w-3 rounded-full"
-                  style={{ backgroundColor: languages[repo.language] || "#666" }}
-                />
+                <span className="inline-block h-3 w-3 rounded-full" style={{ backgroundColor: languages[repo.language] || "#666" }} />
                 {repo.language}
               </span>
             )}
@@ -179,14 +156,14 @@ export default function ProjectDetailPage({ params }: Props) {
           {repo.topics && repo.topics.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
               {repo.topics.map((topic) => (
-                <span key={topic} className="rounded-full bg-accent/10 px-3 py-1 text-xs text-accent">
+                <span key={topic} className="rounded-full bg-amber-500/10 px-3 py-1 text-xs text-amber-500">
                   {topic}
                 </span>
               ))}
             </div>
           )}
 
-          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-xs text-text-secondary">
+          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-xs text-text-muted">
             {repo.license && <span>License: {repo.license.name}</span>}
             <span>Default branch: {repo.default_branch}</span>
             <span>Created: {formatDate(repo.created_at)}</span>
@@ -199,20 +176,10 @@ export default function ProjectDetailPage({ params }: Props) {
               href={repo.homepage}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-accent hover:underline"
+              className="inline-flex items-center gap-2 text-sm text-amber-500 hover:underline"
             >
-              <svg
-                className="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                />
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
               </svg>
               Live Demo: {repo.homepage}
             </a>
@@ -224,9 +191,9 @@ export default function ProjectDetailPage({ params }: Props) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="mt-8 rounded-xl border border-white/5 bg-bg-secondary p-6 md:p-8"
+            className="mt-8 rounded-2xl border border-white/[0.04] bg-bg-secondary/50 p-6 md:p-8"
           >
-            <div className="prose prose-invert max-w-none prose-headings:text-text-primary prose-a:text-accent prose-strong:text-text-primary prose-code:text-accent prose-pre:bg-transparent prose-pre:p-0 prose-img:rounded-lg prose-img:mx-auto prose-hr:border-white/5 [&_pre]:border-0">
+            <div className="prose prose-invert max-w-none prose-headings:text-text-primary prose-a:text-amber-500 prose-strong:text-text-primary prose-code:text-amber-400 prose-pre:bg-transparent prose-pre:p-0 prose-img:rounded-lg prose-img:mx-auto prose-hr:border-white/[0.04] [&_pre]:border-0">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw, rehypeHighlight]}

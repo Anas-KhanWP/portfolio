@@ -1,54 +1,95 @@
 "use client";
 
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { portfolioConfig } from "@/lib/portfolio";
+import SectionHeading from "@/components/ui/SectionHeading";
+
+function ProgressBar({
+  label,
+  index,
+  isInView,
+}: {
+  label: string;
+  index: number;
+  isInView: boolean;
+}) {
+  return (
+    <motion.div
+      className="group"
+      initial={{ opacity: 0, x: -20 }}
+      animate={isInView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.4, delay: index * 0.06 }}
+    >
+      <div className="mb-1.5 flex items-center justify-between">
+        <span className="text-sm text-text-secondary transition-colors group-hover:text-text-primary">
+          {label}
+        </span>
+      </div>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.04]">
+        <motion.div
+          className="h-full rounded-full bg-gradient-to-r from-amber-500 to-amber-400"
+          initial={{ width: 0 }}
+          animate={isInView ? { width: "100%" } : {}}
+          transition={{ duration: 1, delay: 0.3 + index * 0.06, ease: "easeOut" }}
+        />
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Skills() {
+  const [activeTab, setActiveTab] = useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
     <section id="skills" className="mx-auto max-w-6xl px-6 py-20 md:py-32">
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 40 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.7 }}
-      >
-        <h2 className="section-heading">
-          Skills<span className="text-accent">.</span>
-        </h2>
+      <SectionHeading number="03" title="Skills" />
 
-        <div className="grid gap-8 md:grid-cols-2">
-          {portfolioConfig.skills.map((category, catIdx) => (
-            <div
-              key={category.name}
-              className="rounded-xl border border-white/5 bg-bg-secondary p-6"
-            >
-              <h3 className="mb-4 text-lg font-semibold text-accent">
-                {category.name}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {category.items.map((skill, idx) => (
-                  <motion.span
-                    key={skill}
-                    className="rounded-lg border border-white/5 bg-white/[0.03] px-3 py-1.5 text-sm text-text-secondary transition-colors hover:border-accent/30 hover:text-text-primary"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{
-                      duration: 0.3,
-                      delay: catIdx * 0.2 + idx * 0.05,
-                    }}
-                  >
-                    {skill}
-                  </motion.span>
-                ))}
-              </div>
-            </div>
-          ))}
+      <div className="grid gap-8 md:grid-cols-4">
+        <div className="md:col-span-1">
+          <nav className="flex flex-row flex-wrap gap-2 md:flex-col">
+            {portfolioConfig.skills.map((cat, i) => (
+              <button
+                key={cat.name}
+                onClick={() => setActiveTab(i)}
+                className={`rounded-lg px-4 py-2.5 text-left text-sm transition-all ${
+                  activeTab === i
+                    ? "border-l-2 border-amber-500 bg-amber-500/5 text-amber-500"
+                    : "text-text-secondary hover:text-text-primary hover:bg-white/[0.02]"
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </nav>
         </div>
-      </motion.div>
+
+        <div ref={ref} className="md:col-span-3">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="rounded-2xl border border-white/[0.04] bg-bg-secondary/50 p-6 md:p-8"
+          >
+            <h3 className="mb-6 text-lg font-semibold text-amber-500">
+              {portfolioConfig.skills[activeTab].name}
+            </h3>
+            <div className="space-y-4">
+              {portfolioConfig.skills[activeTab].items.map((skill, idx) => (
+                <ProgressBar
+                  key={skill}
+                  label={skill}
+                  index={idx}
+                  isInView={isInView}
+                />
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
     </section>
   );
 }
