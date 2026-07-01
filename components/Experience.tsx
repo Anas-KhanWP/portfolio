@@ -86,7 +86,7 @@ export default function Experience() {
       <SectionHeading number="04" title="Experience" />
 
       <div className="relative flex flex-col gap-10 md:gap-14">
-        <div className="absolute left-5 top-2 bottom-2 w-px md:left-1/2 md:-translate-x-px">
+        <div className="absolute left-[2.75rem] top-2 bottom-2 w-px md:left-1/2 md:-translate-x-px">
           <div className="h-full w-full bg-gradient-to-b from-amber-500/30 via-amber-500/10 to-transparent" />
         </div>
 

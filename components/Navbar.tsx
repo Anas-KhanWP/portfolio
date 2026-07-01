@@ -103,7 +103,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="relative z-50 flex h-8 w-8 flex-col items-center justify-center gap-1.5 md:hidden"
+          className="relative z-50 flex h-11 w-11 flex-col items-center justify-center gap-1.5 md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           <motion.span
@@ -138,7 +138,7 @@ export default function Navbar() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="rounded-lg px-3 py-2.5 text-sm transition-colors hover:bg-white/5 hover:text-text-primary text-text-secondary"
+                  className="rounded-lg px-3 py-3.5 text-sm transition-colors hover:bg-white/5 hover:text-text-primary text-text-secondary"
                 >
                   {link.label}
                 </motion.a>

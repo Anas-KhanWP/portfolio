@@ -54,7 +54,7 @@ export default function Skills() {
               <button
                 key={cat.name}
                 onClick={() => setActiveTab(i)}
-                className={`rounded-lg px-4 py-2.5 text-left text-sm transition-all ${
+                className={`rounded-lg px-4 py-3 sm:py-2.5 text-left text-sm transition-all ${
                   activeTab === i
                     ? "border-l-2 border-amber-500 bg-amber-500/5 text-amber-500"
                     : "text-text-secondary hover:text-text-primary hover:bg-white/[0.02]"

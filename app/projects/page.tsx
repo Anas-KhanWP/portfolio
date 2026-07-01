@@ -76,7 +76,7 @@ export default function ProjectsPage() {
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-32">
+    <main className="mx-auto max-w-6xl px-6 py-20 md:py-32">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -122,7 +122,7 @@ export default function ProjectsPage() {
         </div>
       ) : (
         <>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {repos.map((repo, i) => (
               <motion.div
                 key={repo.id}
@@ -171,7 +171,7 @@ export default function ProjectsPage() {
               <button
                 onClick={loadMore}
                 disabled={loadingMore}
-                className="rounded-lg border border-amber-500/20 px-8 py-3 text-sm font-medium text-amber-500 transition-all hover:bg-amber-500/5 disabled:opacity-40"
+                className="rounded-lg border border-amber-500/20 px-8 py-4 text-sm font-medium text-amber-500 transition-all hover:bg-amber-500/5 disabled:opacity-40"
               >
                 {loadingMore ? "Loading..." : "Load More"}
               </button>
